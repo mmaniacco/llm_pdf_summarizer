@@ -8,9 +8,6 @@ python3 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -r requirements.txt
 
-# Installs the requested Markdown-to-PDF converter locally for development.
-npm install
-
 .venv/bin/pyinstaller --noconfirm --clean --windowed --onefile \
   --name foliomind \
   --add-data 'assets:assets' \

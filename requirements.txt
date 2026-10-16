@@ -1,7 +1,10 @@
 # The Qt Essentials wheel contains the widgets used by FolioMind without
 # pulling in the large WebEngine and PDF add-on runtimes.
 PySide6-Essentials>=6.7
+PySide6-Pdf>=6.7
 PyMuPDF>=1.24
 requests>=2.32
 keyring>=25.0
 pyinstaller>=6.0
+Markdown>=3.6
+WeasyPrint>=62.0
