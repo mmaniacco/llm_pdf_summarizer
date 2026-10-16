@@ -73,7 +73,7 @@ chmod +x package-deb.sh
 ./package-deb.sh
 ```
 
-The package is written to `dist/foliomind_<version>_amd64.deb`. Its version is automatically read from `APP_VERSION` in `paper_studio.py`; the current release is `0.0.20`.
+The package is written to `dist/foliomind_<version>_amd64.deb`. Its version is automatically read from `APP_VERSION` in `paper_studio.py`; the current release is `0.0.21`.
 
 ## Uploading to GitHub
 

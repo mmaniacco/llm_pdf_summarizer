@@ -35,7 +35,7 @@ from PySide6.QtWidgets import (
 )
 
 APP_NAME = "FolioMind"
-APP_VERSION = "0.0.20"
+APP_VERSION = "0.0.21"
 KEYRING_SERVICE = "foliomind"
 HF_CHAT_URL = "https://router.huggingface.co/v1/chat/completions"
 HF_AUTH_URL = "https://huggingface.co/oauth/authorize"
@@ -123,7 +123,15 @@ def call_llm(provider: str, credential: str, model: str, messages: list[dict], e
             json={"model": model, "messages": messages, "temperature": 0.2}, timeout=180)
         try: response.raise_for_status()
         except requests.HTTPError as exc: raise RuntimeError(f"{provider} returned HTTP {response.status_code}: {response.text[:700]}") from exc
-        return response.json()["choices"][0]["message"]["content"]
+        try:
+            content = response.json()["choices"][0]["message"].get("content")
+        except (ValueError, KeyError, IndexError, TypeError) as exc:
+            raise RuntimeError(f"{provider} returned an invalid chat response.") from exc
+        if isinstance(content, list):
+            content = "".join(part.get("text", "") for part in content if isinstance(part, dict))
+        if not isinstance(content, str) or not content.strip():
+            raise RuntimeError(f"{provider} returned an empty response. The selected free model may be temporarily unavailable; retry or choose another free model.")
+        return content
     if provider == "gemini":
         system = "\n\n".join(message["content"] for message in messages if message["role"] == "system")
         contents = [{"role": "user", "parts": [{"text": message["content"]}]} for message in messages if message["role"] != "system"]
@@ -278,10 +286,14 @@ Source notes:
             result = ""
             for attempt in range(1, 4):
                 self.progress.emit(f"Writing final Markdown summary (attempt {attempt}/3)")
-                result = self._call([
-                    {"role": "system", "content": "You are a precise multilingual document summarizer. Return only a detailed Markdown summary; never return moderation labels, safety classifications, or a one-line reply."},
-                    {"role": "user", "content": final_prompt},
-                ])
+                try:
+                    result = self._call([
+                        {"role": "system", "content": "You are a precise multilingual document summarizer. Return only a detailed Markdown summary; never return moderation labels, safety classifications, or a one-line reply."},
+                        {"role": "user", "content": final_prompt},
+                    ])
+                except RuntimeError as exc:
+                    self.progress.emit(f"Final-summary attempt {attempt} failed: {exc}")
+                    continue
                 self.progress.emit(f"Final summary response received ({len(result)} characters)")
                 if valid_summary(result):
                     self.finished.emit(markdown_toc(result) + result)
