@@ -1,0 +1,11 @@
+Package: foliomind
+Version: 0.0.1
+Section: education
+Priority: optional
+Architecture: amd64
+Depends: libxcb-cursor0, libxkbcommon0, libgl1
+Recommends: ocrmypdf, tesseract-ocr
+Maintainer: FolioMind Contributors <maintainers@foliomind.local>
+Description: AI-powered PDF study workspace
+ FolioMind reads local PDF folders, produces Markdown summaries,
+ discovers study categories, and generates quizzes.

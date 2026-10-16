@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FolioMind
+Comment=Turn PDF folders into understanding
+Exec=foliomind
+Icon=foliomind
+Categories=Office;Education;
+Terminal=false

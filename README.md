@@ -4,7 +4,7 @@ FolioMind is a Linux desktop study workspace that reads every PDF in a selected 
 
 ![FolioMind](assets/foliomind-logo.png)
 
-## Install and run from source
+## Run from source
 
 ```bash
 python3 -m venv .venv
@@ -21,7 +21,7 @@ Create a **public** OAuth application in Hugging Face settings and add `http://1
 
 The app uses OAuth PKCE and asks for the `inference-api` scope. The access token is held in the desktop keyring, not in the project directory.
 
-## Build a Linux executable
+## Build a Linux executable or installer
 
 ```bash
 chmod +x build.sh
@@ -29,6 +29,15 @@ chmod +x build.sh
 ```
 
 The executable is written to `dist/foliomind`. Build it on the target Linux family for best compatibility.
+
+To create a click-to-install Linux Mint/Ubuntu package instead:
+
+```bash
+chmod +x package-deb.sh
+./package-deb.sh
+```
+
+The installer is written to `dist/foliomind_0.0.1_amd64.deb`.
 
 ## Provider status
 
